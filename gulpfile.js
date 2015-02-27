@@ -57,3 +57,32 @@ gulp.task('build', function() {
   .pipe(streamify(uglify()))
   .pipe(gulp.dest('./js/build/'));
 });
+
+
+// Run Unit Tests with Coverage
+// ==================================
+gulp.task('test', require('gulp-jsx-coverage').createTask({
+  src: ['js/**/*.tests.{jsx,js}'],                              // will pass to gulp.src
+  istanbul: {                                                   // will pass to istanbul
+    coverageVariable: '__MY_TEST_COVERAGE__',
+    exclude: /node_modules|\/test-helpers|\.tests\.(js|jsx)$/   // pattern to skip instrument
+  },
+  coverage: {
+    reporters: ['text', 'text-summary', 'json', 'lcov'],        // list of istanbul reporters
+    directory: 'coverage'                                       // will pass to istanbul reporters
+  },
+  mocha: {                                                      // will pass to mocha
+    reporter: 'spec'
+  },
+  babel: {                                                      // will pass to babel
+    sourceMap: 'inline'                                         // get hints in HTML covarage reports
+  },
+
+  //optional
+  cleanup: function () {
+    // do extra tasks after test done
+    // EX: clean global.window when test with jsdom
+  }
+}));
+
+

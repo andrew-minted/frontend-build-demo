@@ -2,11 +2,13 @@ Organization Conventions:
 
 JSX files end in .jsx
 
-React component filenames are camelcased, and appended with component.jsx, eg:
-  inputBox.component.jsx
+React components should be put in their own folder (TitleCased), which will contain the component jsx file, the unit tests for it, and the css styling (or Stylus css template).
+
+React component filenames are TitleCased, and appended with component.jsx, eg:
+  InputBox.react.jsx
 
 Unit tests mirror the filename of the unit they are testing, put add the .tests.<ext> suffix. eg:
-  inputBox.component.tests.jsx
+  InputBox.react.tests.jsx
 
 Unit tests should be placed adjacent to the unit they are testing
 

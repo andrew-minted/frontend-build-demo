@@ -1,18 +1,6 @@
-window.React = require('react');
+var React = require('react');
 
-var TodoApp = React.createClass({
-  //get initial state from backbone collection
+var TodoApp = require('./components/TodoApp.react.jsx');
 
-  render: ()=> {
-    return (
-      <div>
-        <h3>Todo List</h3>
-        <ul>
-        </ul>
-      </div>
-    );
-  }
-});
-
-// Render Example Application 
+// Render Todo Application 
 React.render(<TodoApp />, document.getElementById('todo-app'));
