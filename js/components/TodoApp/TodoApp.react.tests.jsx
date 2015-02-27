@@ -1,12 +1,3 @@
-var expect = require('chai').expect;
-
-// Create a fake global `window` and `document` object:
-// Note: This must be required before React
-require('../../../test-helpers/testdom')('<html><body></body></html>');
-
-var React = require('react/addons');
-var TestUtils = React.addons.TestUtils;
-
 describe('TodoApp Component', ()=> {
   // Require React Component that we will be testing
   var TodoApp = require('./TodoApp.react.jsx');

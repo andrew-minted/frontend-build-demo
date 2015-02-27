@@ -1,11 +1,18 @@
-var gulp       = require('gulp');
-var browserify = require('browserify');
-var babelify   = require('babelify');
-var watchify   = require('watchify');
-var streamify  = require('gulp-streamify');
-var source     = require('vinyl-source-stream'); // Used to stream bundle for further handling
-var uglify     = require('gulp-uglify');
-var rename     = require('gulp-rename');
+var gulp         = require('gulp');
+var browserify   = require('browserify');
+var babelify     = require('babelify');
+var watchify     = require('watchify');
+var streamify    = require('gulp-streamify');
+var source       = require('vinyl-source-stream'); // Used to stream bundle for further handling
+var uglify       = require('gulp-uglify');
+var babel        = require('gulp-babel');
+var jshint       = require('gulp-jshint');
+var stylish      = require('jshint-stylish');
+var rename       = require('gulp-rename');
+var jsx_coverage = require('gulp-jsx-coverage');
+var open         = require('gulp-open');
+
+var testdom      = require('./test-helpers/testdom')
 
 
 // Watch & Build Client JS Bundle
@@ -58,31 +65,68 @@ gulp.task('build', function() {
   .pipe(gulp.dest('./js/build/'));
 });
 
+// Run Linting with JSHint
+// ==================================
+gulp.task('lint', function () {
+  gulp.src(['./js/**/!(build)/*.{js,jsx}'])
+    .pipe(babel())
+    .on('error', console.log.bind(console))
+    .pipe(jshint())
+    .pipe(jshint.reporter( stylish ));
+});
+
 
 // Run Unit Tests with Coverage
 // ==================================
-gulp.task('test', require('gulp-jsx-coverage').createTask({
-  src: ['js/**/*.tests.{jsx,js}'],                              // will pass to gulp.src
-  istanbul: {                                                   // will pass to istanbul
-    coverageVariable: '__MY_TEST_COVERAGE__',
-    exclude: /node_modules|\/test-helpers|\.tests\.(js|jsx)$/   // pattern to skip instrument
-  },
-  coverage: {
-    reporters: ['text', 'text-summary', 'json', 'lcov'],        // list of istanbul reporters
-    directory: 'coverage'                                       // will pass to istanbul reporters
-  },
-  mocha: {                                                      // will pass to mocha
-    reporter: 'spec'
-  },
-  babel: {                                                      // will pass to babel
-    sourceMap: 'inline'                                         // get hints in HTML covarage reports
-  },
+gulp.task('test', function() {
+  // Attach boilerplate test utilities before running tests
+  // ##########
 
-  //optional
-  cleanup: function () {
-    // do extra tasks after test done
-    // EX: clean global.window when test with jsdom
-  }
-}));
+  // Create a fake global `window` and `document` object if 'document' doesn't exist
+  testdom('<html><body></body></html>');
 
+  // Make Unit Test Utilities available for all unit tests
+  global.React = require('react/addons');
+  global.TestUtils = React.addons.TestUtils;
+  global.expect = require('chai').expect;
+
+  // ##########
+
+  (jsx_coverage.createTask({
+    src: ['js/**/*.tests.{jsx,js}'],                              // will pass to gulp.src
+    istanbul: {                                                   // will pass to istanbul
+      coverageVariable: '__MY_TEST_COVERAGE__',
+      exclude: /node_modules|\/test-helpers|\.tests\.(js|jsx)$/   // pattern to skip instrument
+    },
+    coverage: {
+      reporters: ['text', 'text-summary', 'json', 'lcov'],        // list of istanbul reporters
+      directory: 'coverage'                                       // will pass to istanbul reporters
+    },
+    mocha: {                                                      // will pass to mocha
+      reporter: 'spec'
+    },
+    babel: {                                                      // will pass to babel
+      sourceMap: 'inline'                                         // get hints in HTML covarage reports
+    },
+
+    //optional
+    cleanup: function () {
+      // do extra tasks after test done
+      // EX: clean global.window when test with jsdom
+    }
+  }))();
+});
+
+
+// Run Linting, Tests, and Code Coverage
+// ==================================
+gulp.task('tests', ['lint', 'test']);
+
+
+// Open Coverage HTML Report in Browser
+// ==================================
+gulp.task('report', function(){
+  gulp.src('./coverage/lcov-report/index.html')
+  .pipe(open('<%file.path%>'));
+});
 
