@@ -2,6 +2,7 @@ var gulp         = require('gulp');
 var browserify   = require('browserify');
 var babelify     = require('babelify');
 var watchify     = require('watchify');
+var livereload   = require('gulp-livereload');
 var streamify    = require('gulp-streamify');
 var source       = require('vinyl-source-stream'); // Used to stream bundle for further handling
 var uglify       = require('gulp-uglify');
@@ -19,6 +20,7 @@ var testdom      = require('./test-helpers/testdom')
 // with source maps for debugging
 // ====================================
 gulp.task('develop', function() {
+  livereload.listen();
   babelify.configure({ // Babelify transforms .es6, .es, .js, and .jsx to ES5
     sourceMapRelative: './js/' // Gives us sourcemapping from transpiled to ES5 files
   });
@@ -38,16 +40,13 @@ gulp.task('develop', function() {
     console.log('Updating!');
     watcher.bundle() // Create new bundle that uses the cache for high performance
     .pipe(source('bundle.js'))
-    .pipe(streamify(uglify({
-      outSourceMap: true // Output source Map
-    })))
-    .pipe(rename({suffix: '.min'}))
     .pipe(gulp.dest('./js/build/'));
     console.log('Updated!', (Date.now() - updateStart) + 'ms');
   })
   .bundle() // Create the initial bundle when starting the task
   .pipe(source('bundle.js'))
-  .pipe(gulp.dest('./js/build/'));
+  .pipe(gulp.dest('./js/build/'))
+  .pipe(livereload());
 });
 
 

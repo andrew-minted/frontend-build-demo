@@ -13,6 +13,7 @@
     "gulp-babel": "^4.0.0",
     "gulp-jshint": "^1.9.2",
     "gulp-jsx-coverage": "0.0.7",
+    "gulp-livereload": "^3.8.0",
     "gulp-open": "^0.3.2",
     "gulp-rename": "^1.2.0",
     "gulp-streamify": "0.0.5",
