@@ -13,7 +13,7 @@ var rename       = require('gulp-rename');
 var jsx_coverage = require('gulp-jsx-coverage');
 var open         = require('gulp-open');
 
-var testdom      = require('./test-helpers/testdom')
+var testdom      = require('./test-helpers/testdom');
 
 
 // Watch & Build Client JS Bundle

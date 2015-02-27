@@ -13,11 +13,11 @@ describe('TodoApp Component', ()=> {
       <TodoApp />
     );
 
-    // Create reference to div whose output we will be testing
+    // Create reference to h3 whose output we will be testing
     h3 = TestUtils.findRenderedDOMComponentWithTag(todoApp, 'h3');
   });
 
   it('renders the hello world text correctly', function() {
-    expect(h3.getDOMNode().textContent).to.equal('Todo List');
+    expect(h3.getDOMNode().textContent).to.equal('Hello World!');
   });
 });
