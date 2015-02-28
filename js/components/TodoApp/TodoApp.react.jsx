@@ -1,6 +1,10 @@
 var React = require('react');
 
+// var BackboneMixin = require('../mixins/BackboneMixin');
+
 var TodoApp = React.createClass({
+  // mixins: [BackboneMixin],
+
   someFunction: ()=> {
     return 'this is to demonstrate that the unit test doesn\'t cover this';
   },
@@ -11,6 +15,11 @@ var TodoApp = React.createClass({
 
   // get initial state from backbone collection
 
+
+  // Get backbone models from collection. This method name is required for the BackboneMixin
+  getBackboneModels: function() {
+
+  },
   // define map of backbone models in collection as children components
 
   render: ()=> {
