@@ -9,7 +9,6 @@ var uglify       = require('gulp-uglify');
 var babel        = require('gulp-babel');
 var jshint       = require('gulp-jshint');
 var stylish      = require('jshint-stylish');
-var rename       = require('gulp-rename');
 var jsx_coverage = require('gulp-jsx-coverage');
 var open         = require('gulp-open');
 
