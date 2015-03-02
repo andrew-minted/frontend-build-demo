@@ -4,6 +4,7 @@ var babelify     = require('babelify');
 var watchify     = require('watchify');
 var livereload   = require('gulp-livereload');
 var streamify    = require('gulp-streamify');
+var util         = require('gulp-util');
 var source       = require('vinyl-source-stream'); // Used to stream bundle for further handling
 var uglify       = require('gulp-uglify');
 var babel        = require('gulp-babel');
@@ -38,7 +39,11 @@ gulp.task('develop', function() {
   .on('update', function () { // When any files update
     var updateStart = Date.now();
     console.log('Updating!');
-    watcher.bundle() // Create new bundle that uses the cache for high performance
+    watcher.bundle()
+    .on('error', function(error){
+      util.log('Error', error);
+      this.end();
+    }) // Create new bundle that uses the cache for high performance
     .pipe(source('bundle.js'))
     .pipe(gulp.dest('./js/build/'));
     console.log('Updated!', (Date.now() - updateStart) + 'ms');
@@ -59,6 +64,10 @@ gulp.task('build', function() {
     transform: [babelify]
   })
   .bundle()
+  .on('error', function(error){
+    util.log('Bundle Error', error);
+    this.end();
+  })
   .pipe(source('bundle.js')) // gives streaming vinyl file object
   .pipe(streamify(uglify()))
   .pipe(gulp.dest('./js/build/'));
@@ -129,3 +138,4 @@ gulp.task('report', function(){
   .pipe(open('<%file.path%>'));
 });
 
+gulp.task('default', ['develop']);
