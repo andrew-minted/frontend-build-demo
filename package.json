@@ -9,6 +9,7 @@
     "babelify": "^5.0.3",
     "browserify": "^9.0.3",
     "chai": "^2.1.0",
+    "colors": "^1.0.3",
     "gulp": "^3.8.11",
     "gulp-babel": "^4.0.0",
     "gulp-jshint": "^1.9.2",

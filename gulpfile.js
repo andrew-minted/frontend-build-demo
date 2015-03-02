@@ -14,6 +14,7 @@ var jsx_coverage = require('gulp-jsx-coverage');
 var open         = require('gulp-open');
 
 var testdom      = require('./test-helpers/testdom');
+var checkForUnitTests = require('./test-helpers/checkForUnitTests');
 
 
 // Watch & Build Client JS Bundle
@@ -85,7 +86,7 @@ gulp.task('lint', function () {
 
 // Run Unit Tests with Coverage
 // ==================================
-gulp.task('test', function() {
+gulp.task('cover-and-test', function() {
   // Attach boilerplate test utilities before running tests
   // ##########
 
@@ -116,10 +117,15 @@ gulp.task('test', function() {
       sourceMap: 'inline'                                         // get hints in HTML covarage reports
     },
 
-    //optional
+    //optional tasks to be run after test is done
     cleanup: function () {
-      // do extra tasks after test done
       // EX: clean global.window when test with jsdom
+      
+      // Check files not covered by istanbul* for unit tests
+      // * Istanbul will only report coverage for source files that are
+      // required by the the test files it executes. This script will
+      // report which files are missing accompanying .tests.{js,jsx} files
+      checkForUnitTests('src');
     }
   }))();
 });
@@ -127,7 +133,7 @@ gulp.task('test', function() {
 
 // Run Linting, Tests, and Code Coverage
 // ==================================
-gulp.task('tests', ['lint', 'test']);
+gulp.task('test', ['lint', 'cover-and-test']);
 
 
 // Open Coverage HTML Report in Browser
