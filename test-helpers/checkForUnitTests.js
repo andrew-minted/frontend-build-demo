@@ -1,7 +1,7 @@
 var recursiveSearch = require('recursive-readdir');
 var path = require('path');
 
-var sourceDir = 'js';
+var sourceDir = 'src';
 recursiveSearch(__dirname + '/../' + sourceDir, ['bundle.js', '*.css', '*.sass', '*.html'], function(err, files) {
   if (err) { throw err; }
 

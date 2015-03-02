@@ -22,11 +22,11 @@ var testdom      = require('./test-helpers/testdom');
 gulp.task('develop', function() {
   livereload.listen();
   babelify.configure({ // Babelify transforms .es6, .es, .js, and .jsx to ES5
-    sourceMapRelative: './js/' // Gives us sourcemapping from transpiled to ES5 files
+    sourceMapRelative: './src/' // Gives us sourcemapping from transpiled to ES5 files
   });
 
   var bundler = browserify({
-    entries: ['./js/app.jsx'], // Only need initial file, browserify finds the deps
+    entries: ['./src/app.jsx'], // Only need initial file, browserify finds the deps
     transform: [babelify],
     debug: true, // Gives us sourcemapping
     cache: {}, packageCache: {}, fullPaths: true // Requirement of watchify
@@ -44,12 +44,12 @@ gulp.task('develop', function() {
       this.end();
     }) // Create new bundle that uses the cache for high performance
     .pipe(source('bundle.js'))
-    .pipe(gulp.dest('./js/build/'));
+    .pipe(gulp.dest('./src/build/'));
     console.log('Updated!', (Date.now() - updateStart) + 'ms');
   })
   .bundle() // Create the initial bundle when starting the task
   .pipe(source('bundle.js'))
-  .pipe(gulp.dest('./js/build/'))
+  .pipe(gulp.dest('./src/build/'))
   .pipe(livereload());
 });
 
@@ -59,7 +59,7 @@ gulp.task('develop', function() {
 // ====================================
 gulp.task('build', function() {
   return browserify({
-    entries: ['./js/app.jsx'], // Only need initial file, browserify finds the deps
+    entries: ['./src/app.jsx'], // Only need initial file, browserify finds the deps
     transform: [babelify]
   })
   .bundle()
@@ -69,13 +69,13 @@ gulp.task('build', function() {
   })
   .pipe(source('bundle.js')) // gives streaming vinyl file object
   .pipe(streamify(uglify()))
-  .pipe(gulp.dest('./js/build/'));
+  .pipe(gulp.dest('./src/build/'));
 });
 
 // Run Linting with JSHint
 // ==================================
 gulp.task('lint', function () {
-  gulp.src(['./js/**/!(build)/*.{js,jsx}'])
+  gulp.src(['./src/**/!(build)/*.{js,jsx}'])
     .pipe(babel())
     .on('error', console.log.bind(console))
     .pipe(jshint())
@@ -100,7 +100,7 @@ gulp.task('test', function() {
   // ##########
 
   (jsx_coverage.createTask({
-    src: ['js/**/*.tests.{jsx,js}'],                              // will pass to gulp.src
+    src: ['src/**/*.tests.{jsx,js}'],                              // will pass to gulp.src
     istanbul: {                                                   // will pass to istanbul
       coverageVariable: '__MY_TEST_COVERAGE__',
       exclude: /node_modules|\/test-helpers|\.tests\.(js|jsx)$/   // pattern to skip instrument
