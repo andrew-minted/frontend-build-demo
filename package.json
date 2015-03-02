@@ -28,5 +28,8 @@
     "start": "gulp develop",
     "test": "gulp test",
     "build": "gulp build"
+  },
+  "devDependencies": {
+    "gulp-util": "^3.0.4"
   }
 }
