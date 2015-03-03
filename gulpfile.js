@@ -93,9 +93,7 @@ gulp.task('cover-and-test', function() {
   // Create a fake global `window` and `document` object if 'document' doesn't exist
   testdom('<html><body></body></html>');
 
-  // Make Unit Test Utilities available for all unit tests
-  global.React = require('react/addons');
-  global.TestUtils = React.addons.TestUtils;
+  // Make Chai available for all unit tests
   global.expect = require('chai').expect;
 
   // ##########
@@ -127,7 +125,8 @@ gulp.task('cover-and-test', function() {
       // report which files are missing accompanying .tests.{js,jsx} files
       checkForUnitTests('src');
     }
-  }))();
+  }))()
+  .on('error', console.log.bind(console));
 });
 
 
