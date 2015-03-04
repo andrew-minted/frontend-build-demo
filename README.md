@@ -1,6 +1,20 @@
 Demo of React+Backbone+Browserify+Mocha+JSDOM+Istanbul+JSX+ES6
 ==================
 
+### Getting Started:
+```
+# Install dependencies
+npm install
+
+# Start Build Process (watches for file changes)
+gulp develop
+
+# (In a new tab), open the app
+open .
+
+# Run Tests (this will run the linter, mocha, code coverage, and checkForUnitTests script)
+gulp test
+```
 
 
 ###Organization Conventions:

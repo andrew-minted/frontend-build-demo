@@ -143,5 +143,3 @@ gulp.task('report', function(){
   gulp.src('./coverage/lcov-report/index.html')
   .pipe(open('<%file.path%>'));
 });
-
-gulp.task('default', ['develop']);
