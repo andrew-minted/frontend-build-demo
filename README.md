@@ -6,6 +6,9 @@ Demo of React+Backbone+Browserify+Mocha+JSDOM+Istanbul+JSX+ES6
 # Install dependencies
 npm install
 
+# Install gulp globally (if you don't already have it)
+npm install -g gulp
+
 # Start Build Process (watches for file changes)
 gulp develop
 
