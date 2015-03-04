@@ -10,11 +10,11 @@ var uglify       = require('gulp-uglify');
 var babel        = require('gulp-babel');
 var jshint       = require('gulp-jshint');
 var stylish      = require('jshint-stylish');
-var rename       = require('gulp-rename');
 var jsx_coverage = require('gulp-jsx-coverage');
 var open         = require('gulp-open');
 
 var testdom      = require('./test-helpers/testdom');
+var checkForUnitTests = require('./test-helpers/checkForUnitTests');
 
 
 // Watch & Build Client JS Bundle
@@ -23,11 +23,11 @@ var testdom      = require('./test-helpers/testdom');
 gulp.task('develop', function() {
   livereload.listen();
   babelify.configure({ // Babelify transforms .es6, .es, .js, and .jsx to ES5
-    sourceMapRelative: './js/' // Gives us sourcemapping from transpiled to ES5 files
+    sourceMapRelative: './src/' // Gives us sourcemapping from transpiled to ES5 files
   });
 
   var bundler = browserify({
-    entries: ['./js/app.jsx'], // Only need initial file, browserify finds the deps
+    entries: ['./src/app.jsx'], // Only need initial file, browserify finds the deps
     transform: [babelify],
     debug: true, // Gives us sourcemapping
     cache: {}, packageCache: {}, fullPaths: true // Requirement of watchify
@@ -45,12 +45,12 @@ gulp.task('develop', function() {
       this.end();
     }) // Create new bundle that uses the cache for high performance
     .pipe(source('bundle.js'))
-    .pipe(gulp.dest('./js/build/'));
+    .pipe(gulp.dest('./src/build/'));
     console.log('Updated!', (Date.now() - updateStart) + 'ms');
   })
   .bundle() // Create the initial bundle when starting the task
   .pipe(source('bundle.js'))
-  .pipe(gulp.dest('./js/build/'))
+  .pipe(gulp.dest('./src/build/'))
   .pipe(livereload());
 });
 
@@ -60,7 +60,7 @@ gulp.task('develop', function() {
 // ====================================
 gulp.task('build', function() {
   return browserify({
-    entries: ['./js/app.jsx'], // Only need initial file, browserify finds the deps
+    entries: ['./src/app.jsx'], // Only need initial file, browserify finds the deps
     transform: [babelify]
   })
   .bundle()
@@ -70,13 +70,13 @@ gulp.task('build', function() {
   })
   .pipe(source('bundle.js')) // gives streaming vinyl file object
   .pipe(streamify(uglify()))
-  .pipe(gulp.dest('./js/build/'));
+  .pipe(gulp.dest('./src/build/'));
 });
 
 // Run Linting with JSHint
 // ==================================
 gulp.task('lint', function () {
-  gulp.src(['./js/**/!(build)/*.{js,jsx}'])
+  gulp.src(['./src/**/!(build)/*.{js,jsx}'])
     .pipe(babel())
     .on('error', console.log.bind(console))
     .pipe(jshint())
@@ -86,25 +86,23 @@ gulp.task('lint', function () {
 
 // Run Unit Tests with Coverage
 // ==================================
-gulp.task('test', function() {
+gulp.task('cover-and-test', function() {
   // Attach boilerplate test utilities before running tests
   // ##########
 
   // Create a fake global `window` and `document` object if 'document' doesn't exist
   testdom('<html><body></body></html>');
 
-  // Make Unit Test Utilities available for all unit tests
-  global.React = require('react/addons');
-  global.TestUtils = React.addons.TestUtils;
+  // Make Chai available for all unit tests
   global.expect = require('chai').expect;
 
   // ##########
 
   (jsx_coverage.createTask({
-    src: ['js/**/*.tests.{jsx,js}'],                              // will pass to gulp.src
+    src: ['src/**/*.tests.{jsx,js}'],                              // will pass to gulp.src
     istanbul: {                                                   // will pass to istanbul
       coverageVariable: '__MY_TEST_COVERAGE__',
-      exclude: /node_modules|\/test-helpers|\.tests\.(js|jsx)$/   // pattern to skip instrument
+      exclude: /node_modules|\/test-helpers|\.tests\.(js|jsx)|app.jsx$/   // pattern to skip instrument
     },
     coverage: {
       reporters: ['text', 'text-summary', 'json', 'lcov'],        // list of istanbul reporters
@@ -117,18 +115,26 @@ gulp.task('test', function() {
       sourceMap: 'inline'                                         // get hints in HTML covarage reports
     },
 
-    //optional
+    //optional tasks to be run after test is done
     cleanup: function () {
-      // do extra tasks after test done
       // EX: clean global.window when test with jsdom
+      
+      // Check files not covered by istanbul* for unit tests
+      // * Istanbul will only report coverage for source files that are
+      // required by the the test files it executes. This script will
+      // report which files are missing accompanying .tests.{js,jsx} files
+      // first argument is src directory, second argument is array of globs
+      // to ignore
+      checkForUnitTests('src', ['app.jsx', 'bundle.js', '*.css', '*.scss', '*.html']);
     }
-  }))();
+  }))()
+  .on('error', console.log.bind(console));
 });
 
 
 // Run Linting, Tests, and Code Coverage
 // ==================================
-gulp.task('tests', ['lint', 'test']);
+gulp.task('test', ['lint', 'cover-and-test']);
 
 
 // Open Coverage HTML Report in Browser
