@@ -2,16 +2,14 @@ var Backbone = require('backbone');
 var proxyquire = require('proxyquire').noCallThru();
 
 // define mock dependency
-var mockTodo = new Backbone.Model.extend({
-  defaults: {}
-});
+var mockTodo = new Backbone.Model.extend({});
 
 // override the modules dependencies with mocks
 var Todos = proxyquire('./Todos.collection', {
   './Todo.model': mockTodo
 });
 
-describe('Todos collection', function() {
+describe('Todos Collection', function() {
   var todos = new Todos();
 
   it("doesn't require unit tests because it only uses backbone defaults", function() {

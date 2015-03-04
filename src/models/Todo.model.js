@@ -5,7 +5,7 @@ var Todo = Backbone.Model.extend({
     text: '',
     completed: false
   },
-  switchCompletedState: function() {
+  toggleCompletedState: function() {
     if (this.get('completed') === true) {
       this.set({'completed': false});
     } else {
