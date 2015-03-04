@@ -23,11 +23,15 @@ All .js and .jsx files can freely use ES6 features, including the unit tests.
 ###Limitations:
 
   - coverage statistics will only be gathered for files that are imported by *.tests.{js,jsx} files. This means that if you haven't written a unit test *file*, then the file that should be tested will not be reported in the coverage statistics.
-  This means it is crucial to always double check that a new js/jsx file is accompanied by a corresponding test file
+  This means it is crucial to always double check that a new js/jsx file is accompanied by a corresponding test file.
+
+  - the test-helpers/checkForUnitTests.js script will run after all the tests and report (via the terminal) any files that are missing an accompanying '*.tests.{js,jsx}' file.
+
+  - Make sure your unit test file requires the module you are testing, otherwise both istanbul AND the checkForUnitTests script will not flag the module as being untested. (TODO: upgrade the checkForUnitTests.js script to verify that the *.tests.{js,jsx} file requires the module it's supposed to test)
 
 
 ###Unit Testing:
-  JSDom's virtual dom, React, React Test Utils, and Chai's Expect are available globally to all tests before running. This may
+  JSDom's virtual dom and Chai's Expect are available globally to all tests before running. This may
   have performance implications for non-react component unit tests, but it substantially reduces the boilerplate burden of
   a developer writing unit tests. It's better for the unit tests to take a bit longer to run because of unused libraries loaded
   (only for that one testing runtime) than to discourage developers from unit testing.
