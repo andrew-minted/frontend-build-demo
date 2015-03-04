@@ -1,32 +1,37 @@
 var React = require('react');
 
-// var BackboneMixin = require('../mixins/BackboneMixin');
+var BackboneMixin = require('../../mixins/BackboneMixin');
+var TodoItem = require('../TodoItem/TodoItem.react.jsx');
+var AddTodo = require('../AddTodo/AddTodo.react.jsx');
 
 var TodoApp = React.createClass({
-  // mixins: [BackboneMixin],
+  mixins: [BackboneMixin],
 
-  someFunction: ()=> {
+  someFunction: () => {
     return 'this is to demonstrate that the unit test doesn\'t cover this';
   },
-  // add backbone mixin for boilerplate event listening / binding functionality
-  // http://stackoverflow.com/questions/20371566/handling-backbone-model-collection-changes-in-react-js
-  // https://github.com/facebook/react/blob/1be9a9e/examples/todomvc-backbone/js/app.js#L148-L171
-  // https://www.npmjs.com/package/react.backbone
-
-  // get initial state from backbone collection
-
-
-  // Get backbone models from collection. This method name is required for the BackboneMixin
-  getBackboneModels: function() {
-
+  
+  // Get backbone models from collection. 
+  // This method is required for the Backbone Mixin to function correctly
+  getBackboneCollection: function() {
+    return this.props.todos;
   },
-  // define map of backbone models in collection as children components
 
-  render: ()=> {
+  addNewTodo: function(objForNewModel){
+    this.props.todos.add(objForNewModel);
+  },
+  
+  render: function() {
+    // define map of backbone models in collection as children components
+    var todoItemComponents = this.props.todos.map(function(todo, index){
+      return (<TodoItem key={index} idx={index} todo={todo} />);
+    });
     return (
       <div>
-        <h3>Hello World!</h3>
+        <h3>Todo List</h3>
+        <AddTodo handleSubmit={this.addNewTodo}/>
         <ul>
+          {todoItemComponents}
         </ul>
       </div>
     );

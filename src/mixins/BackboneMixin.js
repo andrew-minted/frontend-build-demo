@@ -10,8 +10,11 @@
 // hierarchy) this should not be an issue.
 var BackboneMixin = {
   componentDidMount: function() {
-    // Whenever there may be a change in the Backbone data, trigger a reconcile.
-    this.getBackboneModels().forEach(function(model) {
+    // Whenever there is a change to the Backbone collection, trigger a reconcile.
+    this.getBackboneCollection().on('add change remove', this.forceUpdate.bind(this, null), this);
+
+    // Whenever there is a change in a Backbone model in the collection, trigger a reconcile.
+    this.getBackboneCollection().forEach(function(model) {
       model.on('add change remove', this.forceUpdate.bind(this, null), this);
     }, this);
   },
@@ -19,7 +22,9 @@ var BackboneMixin = {
   componentWillUnmount: function() {
     // Ensure that we clean up any dangling references when the component is
     // destroyed.
-    this.getBackboneModels().forEach(function(model) {
+    this.getBackboneCollection().off(null, null, this);
+    
+    this.getBackboneCollection().forEach(function(model) {
       model.off(null, null, this);
     }, this);
   }

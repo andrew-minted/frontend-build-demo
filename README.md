@@ -34,3 +34,46 @@ All .js and .jsx files can freely use ES6 features, including the unit tests.
 
 ###Linting:
   .jshintrc file has configuration
+
+
+### Test Writing
+
+#### Requiring Global libraries / tools
+Because node caches CJS modules, the tests will run faster if you import global libraries and tools (like React, Backbone, sinon, proxyquire, etc.) *outside* of the unit tests' describe blocks.
+
+#### Requiring 1st party modules / code to test
+In order to namespace the tests effectively and prevent errors from occuring due to Node's CJS caching, it is important that in your test files, you only require 1st party modules using proxyquire. This should be done in the 'before' block.
+
+If you have no dependencies, then it should pass an empty object as the second argument:
+``` 
+var myModule = proxyquire('./path/to/myModule', {})
+```
+
+If you have dependencies to mock, pass them in as arguments, like so:
+``` 
+var myModule = proxyquire('./path/to/myModule', {
+  './path/to/dependency': myMock
+});
+```
+
+*Note* Requiring 1st party modules can mess up code coverage reporting. Istanbul measures coverage by checking which functions are called by files required by unit tests. By requiring a 1st party module in a unit test from some other module, istanbul may over-report coverage if its functions are called. As a result, it's always advisable to mock (without requiring) instead of requiring other 1st party modules whenever possible.
+
+#### Unit Test Scoping Rules of Thumb
+
+#####GLOBAL SCOPE
+- Require global modules and libraries in the global scope
+- Don't put anything else here
+
+#####DESCRIBE BLOCK
+- Declare all variables that will be used and reused in tests
+- Do not put any other code here, because Mocha's error handle will not bubble up and will crash the test process.
+
+#####HOOKS (Before, BeforeEach, After, AfterEach)
+- Anything/everything that changes the state of objects used in testing
+- Create mocks
+- Require all 1st party modules (only using proxyquire in order to bypass Node's CJS cache, even if not mocking)
+
+More information on Mocha scoping: http://stackoverflow.com/questions/21470349/variable-in-outer-describe-block-is-undefined-when-accessing-in-inner-describe-b
+
+
+

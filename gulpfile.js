@@ -102,7 +102,7 @@ gulp.task('cover-and-test', function() {
     src: ['src/**/*.tests.{jsx,js}'],                              // will pass to gulp.src
     istanbul: {                                                   // will pass to istanbul
       coverageVariable: '__MY_TEST_COVERAGE__',
-      exclude: /node_modules|\/test-helpers|\.tests\.(js|jsx)$/   // pattern to skip instrument
+      exclude: /node_modules|\/test-helpers|\.tests\.(js|jsx)|app.jsx$/   // pattern to skip instrument
     },
     coverage: {
       reporters: ['text', 'text-summary', 'json', 'lcov'],        // list of istanbul reporters
@@ -123,7 +123,9 @@ gulp.task('cover-and-test', function() {
       // * Istanbul will only report coverage for source files that are
       // required by the the test files it executes. This script will
       // report which files are missing accompanying .tests.{js,jsx} files
-      checkForUnitTests('src');
+      // first argument is src directory, second argument is array of globs
+      // to ignore
+      checkForUnitTests('src', ['app.jsx', 'bundle.js', '*.css', '*.scss', '*.html']);
     }
   }))()
   .on('error', console.log.bind(console));

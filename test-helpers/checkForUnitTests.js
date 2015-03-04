@@ -2,8 +2,8 @@ var recursiveSearch = require('recursive-readdir');
 var colors = require('colors');
 var path = require('path');
 
-var checkForUnitTests = function(sourceDir) {
-  recursiveSearch(__dirname + '/../' + sourceDir, ['bundle.js', '*.css', '*.sass', '*.html'], function(err, files) {
+var checkForUnitTests = function(sourceDir, ignoredGlobs) {
+  recursiveSearch(__dirname + '/../' + sourceDir, ignoredGlobs, function(err, files) {
     if (err) { throw err; }
 
     var allFiles = {};
