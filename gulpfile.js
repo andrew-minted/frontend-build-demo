@@ -12,8 +12,7 @@ var jshint       = require('gulp-jshint');
 var stylish      = require('jshint-stylish');
 var jsx_coverage = require('gulp-jsx-coverage');
 var open         = require('gulp-open');
-
-var testdom      = require('./test-helpers/testdom');
+var testdom      = require('testdom');
 var checkForUnitTests = require('./test-helpers/checkForUnitTests');
 
 
@@ -87,8 +86,8 @@ gulp.task('lint', function () {
 // Run Unit Tests with Coverage
 // ==================================
 gulp.task('cover-and-test', function() {
-  // Attach boilerplate test utilities before running tests
-  // ##########
+  // Run scripts before tests
+  // This is a good place to insert globals for test running, if necessary
 
   // Create a fake global `window` and `document` object if 'document' doesn't exist
   testdom('<html><body></body></html>');
@@ -96,7 +95,6 @@ gulp.task('cover-and-test', function() {
   // Make Chai available for all unit tests
   global.expect = require('chai').expect;
 
-  // ##########
 
   (jsx_coverage.createTask({
     src: ['src/**/*.tests.{jsx,js}'],                              // will pass to gulp.src
