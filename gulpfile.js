@@ -100,9 +100,18 @@ gulp.task('cover-and-test', function() {
 
   (jsx_coverage.createTask({
     src: ['src/**/*.tests.{jsx,js}'],                              // will pass to gulp.src
-    istanbul: {                                                   // will pass to istanbul
-      coverageVariable: '__MY_TEST_COVERAGE__',
-      exclude: /node_modules|\/test-helpers|\.tests\.(js|jsx)|app.jsx$/   // pattern to skip instrument
+    istanbul: {                                                    // will pass to istanbul
+        coverageVariable: '__MY_TEST_COVERAGE__',
+        exclude: /node_modules|\.tests\.(js|jsx)|\/test-helpers|app.jsx/,
+    },
+    transpile: {
+        babel: {
+            include: /\.jsx|\.js$/,
+            exclude: /node_modules/
+        },
+        coffee: {
+            include: /\.coffee$/
+        }
     },
     coverage: {
       reporters: ['text', 'text-summary', 'json', 'lcov'],        // list of istanbul reporters
@@ -143,3 +152,5 @@ gulp.task('report', function(){
   gulp.src('./coverage/lcov-report/index.html')
   .pipe(open('<%file.path%>'));
 });
+
+gulp.task('default', ['develop']);

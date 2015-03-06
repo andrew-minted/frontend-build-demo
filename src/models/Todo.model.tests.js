@@ -5,7 +5,7 @@ describe('Todo Model', function(){
   var Todo;
   var todo;
 
-  before(function(){
+  before(() => {
     //Require module that we're testing
     Todo = proxyquire('./Todo.model', {});
   });
