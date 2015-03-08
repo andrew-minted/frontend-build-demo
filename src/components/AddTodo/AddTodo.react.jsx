@@ -24,7 +24,7 @@ var AddTodo = React.createClass({
     return (
      <h4>
        <p>Add a new todo</p>
-       <input type='text' 
+       <input type='text'
          onChange={this.handleInputChange}
          value={this.state.inputText}
        />

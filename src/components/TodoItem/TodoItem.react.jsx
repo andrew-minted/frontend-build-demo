@@ -1,7 +1,7 @@
 // Copyright (C) 2015 Minted Inc.
 // All Rights Reserved
 
-"use strict";
+'use strict';
 
 var React = require('react');
 
@@ -12,12 +12,12 @@ var TodoItem = React.createClass({
   render: function() {
     return (
       <li>
-        <span>    
-          <input 
-            onChange={this.handleCheckboxChange} 
+        <span>
+          <input
+            onChange={this.handleCheckboxChange}
             type='checkbox' checked={this.props.todo.get('completed')}
           />
-          {this.props.todo.get('text')}  
+          {this.props.todo.get('text')}
         </span>
       </li>
     );

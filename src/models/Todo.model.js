@@ -1,7 +1,7 @@
 // Copyright (C) 2015 Minted Inc.
 // All Rights Reserved
 
-"use strict";
+'use strict';
 
 var Backbone = require('backbone');
 
@@ -18,6 +18,6 @@ var Todo = Backbone.Model.extend({
       (() => { return 'this is a sample ES6 anonymous function'; })();
     }
   }
-})
+});
 
 module.exports = Todo;

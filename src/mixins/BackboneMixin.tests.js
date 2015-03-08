@@ -1,7 +1,7 @@
 // Copyright (C) 2015 Minted Inc.
 // All Rights Reserved
 
-"use strict";
+'use strict';
 
 var proxyquire = require('proxyquire').noCallThru();
 
@@ -13,6 +13,6 @@ describe('BackboneMixin', function(){
   });
 
   it('should exist', function(){
-    expect(true).to.not.equal(false);
+    expect(module).to.not.equal(undefined);
   });
 });
