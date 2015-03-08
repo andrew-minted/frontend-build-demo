@@ -1,3 +1,8 @@
+// Copyright (C) 2015 Minted Inc.
+// All Rights Reserved
+
+"use strict";
+
 var React = require('react');
 
 var AddTodo = React.createClass({

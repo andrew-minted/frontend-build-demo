@@ -8,6 +8,9 @@
 // same model instances throughout the lifecycle of the component. If you're
 // using this mixin correctly (it should be near the top of your component
 // hierarchy) this should not be an issue.
+
+"use strict";
+
 var BackboneMixin = {
   componentDidMount: function() {
     // Whenever there is a change to the Backbone collection, trigger a reconcile.

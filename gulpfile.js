@@ -1,3 +1,8 @@
+// Copyright (C) 2015 Minted Inc.
+// All Rights Reserved
+
+"use strict";
+
 var gulp         = require('gulp');
 var browserify   = require('browserify');
 var babelify     = require('babelify');
@@ -13,7 +18,7 @@ var stylish      = require('jshint-stylish');
 var jsx_coverage = require('gulp-jsx-coverage');
 var open         = require('gulp-open');
 var testdom      = require('testdom');
-var checkForUnitTests = require('./test-helpers/checkForUnitTests');
+var testcop      = require('test-cop');
 
 
 // Watch & Build Client JS Bundle
@@ -95,6 +100,8 @@ gulp.task('cover-and-test', function() {
   // Make Chai available for all unit tests
   global.expect = require('chai').expect;
 
+  // Run testcop to generate unit test scaffold for source files missing unit tests
+  testcop('./src/**/!(build)/*.{js,jsx}', '.tests');
 
   (jsx_coverage.createTask({
     src: ['src/**/*.tests.{jsx,js}'],                              // will pass to gulp.src
@@ -125,23 +132,14 @@ gulp.task('cover-and-test', function() {
     //optional tasks to be run after test is done
     cleanup: function () {
       // EX: clean global.window when test with jsdom
-      
-      // Check files not covered by istanbul* for unit tests
-      // * Istanbul will only report coverage for source files that are
-      // required by the the test files it executes. This script will
-      // report which files are missing accompanying .tests.{js,jsx} files
-      // first argument is src directory, second argument is array of globs
-      // to ignore
-      checkForUnitTests('src', ['app.jsx', 'bundle.js', '*.css', '*.scss', '*.html']);
     }
-  }))()
-  .on('error', console.log.bind(console));
+  }))().on('error', console.log.bind(console));
 });
 
 
 // Run Linting, Tests, and Code Coverage
 // ==================================
-gulp.task('test', ['lint', 'cover-and-test']);
+gulp.task('test', [/*'lint',*/ 'cover-and-test']);
 
 
 // Open Coverage HTML Report in Browser
