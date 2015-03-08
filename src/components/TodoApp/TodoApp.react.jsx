@@ -1,7 +1,7 @@
 // Copyright (C) 2015 Minted Inc.
 // All Rights Reserved
 
-"use strict";
+'use strict';
 
 var React = require('react');
 
@@ -15,8 +15,8 @@ var TodoApp = React.createClass({
   someFunction: () => {
     return 'this is to demonstrate that the unit test doesn\'t cover this';
   },
-  
-  // Get backbone models from collection. 
+
+  // Get backbone models from collection.
   // This method is required for the Backbone Mixin to function correctly
   getBackboneCollection: function() {
     return this.props.todos;
@@ -25,7 +25,7 @@ var TodoApp = React.createClass({
   addNewTodo: function(objForNewModel){
     this.props.todos.add(objForNewModel);
   },
-  
+
   render: function() {
     // define map of backbone models in collection as children components
     var todoItemComponents = this.props.todos.map(function(todo, index){

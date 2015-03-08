@@ -5,8 +5,8 @@
 
 var proxyquire = require('proxyquire').noCallThru();
 
-describe('AddTodo.react', function(){
-  var module;
+describe('AddTodo Component', function(){
+  var module
 
   before(function(){
     module = proxyquire('./AddTodo.react.jsx', {});

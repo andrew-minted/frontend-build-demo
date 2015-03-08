@@ -26,6 +26,6 @@ describe('Todos Collection', function() {
   });
 
   it("doesn't require unit tests because it only uses backbone defaults", function() {
-    expect(todos instanceof Backbone.Collection).to.equal(true);
+    expect(todos instanceof Backbone.Collection).to.equal(true)
   });
 });

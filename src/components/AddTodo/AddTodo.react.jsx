@@ -1,7 +1,7 @@
 // Copyright (C) 2015 Minted Inc.
 // All Rights Reserved
 
-"use strict";
+'use strict';
 
 var React = require('react');
 

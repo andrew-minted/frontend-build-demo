@@ -1,7 +1,7 @@
 // Copyright (C) 2015 Minted Inc.
 // All Rights Reserved
 
-"use strict";
+'use strict';
 
 var gulp         = require('gulp');
 var browserify   = require('browserify');
@@ -12,10 +12,8 @@ var streamify    = require('gulp-streamify');
 var util         = require('gulp-util');
 var source       = require('vinyl-source-stream'); // Used to stream bundle for further handling
 var uglify       = require('gulp-uglify');
-var babel        = require('gulp-babel');
-var jshint       = require('gulp-jshint');
-var stylish      = require('jshint-stylish');
-var jsx_coverage = require('gulp-jsx-coverage');
+var eslint       = require('gulp-eslint');
+var jsxcoverage  = require('gulp-jsx-coverage');
 var open         = require('gulp-open');
 var testdom      = require('testdom');
 var testcop      = require('test-cop');
@@ -77,20 +75,21 @@ gulp.task('build', function() {
   .pipe(gulp.dest('./src/build/'));
 });
 
-// Run Linting with JSHint
+
+// Run Linting with ESLint
 // ==================================
 gulp.task('lint', function () {
-  gulp.src(['./src/**/!(build)/*.{js,jsx}'])
-    .pipe(babel())
-    .on('error', console.log.bind(console))
-    .pipe(jshint())
-    .pipe(jshint.reporter( stylish ));
+  // Note: To have the process exit with an error code (1) on
+  //  lint error, return the stream and pipe to failOnError last.
+  return gulp.src(['./src/**/!(build)/*.{js,jsx}'])
+    .pipe(eslint())
+    .pipe(eslint.format());
 });
 
 
-// Run Unit Tests with Coverage
-// ==================================
-gulp.task('cover-and-test', function() {
+// Run Linting and Unit Tests (w/ Code Coverage)
+// =============================================
+gulp.task('test', ['lint'], function() {
   // Run scripts before tests
   // This is a good place to insert globals for test running, if necessary
 
@@ -103,11 +102,11 @@ gulp.task('cover-and-test', function() {
   // Run testcop to generate unit test scaffold for source files missing unit tests
   testcop('./src/**/!(build)/*.{js,jsx}', '.tests');
 
-  (jsx_coverage.createTask({
+  (jsxcoverage.createTask({
     src: ['src/**/*.tests.{jsx,js}'],                              // will pass to gulp.src
     istanbul: {                                                    // will pass to istanbul
         coverageVariable: '__MY_TEST_COVERAGE__',
-        exclude: /node_modules|\.tests\.(js|jsx)|\/test-helpers|app.jsx/,
+        exclude: /node_modules|\.tests\.(js|jsx)|\/test-helpers|app.jsx/
     },
     transpile: {
         babel: {
@@ -135,11 +134,6 @@ gulp.task('cover-and-test', function() {
     }
   }))().on('error', console.log.bind(console));
 });
-
-
-// Run Linting, Tests, and Code Coverage
-// ==================================
-gulp.task('test', [/*'lint',*/ 'cover-and-test']);
 
 
 // Open Coverage HTML Report in Browser

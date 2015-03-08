@@ -20,6 +20,14 @@ gulp test
 ```
 
 
+### Linting Guide
+To get Sublime Text linting that adheres to the .eslintrc settings per project, follow this excellent guide:
+https://medium.com/@dan_abramov/lint-like-it-s-2015-6987d44c5b48
+
+Doing so will save you a lot of trouble because you'll catch syntax errors and style deviations faster than running the 
+linting task.
+
+
 ###Organization Conventions:
 
 JSX files end in .jsx

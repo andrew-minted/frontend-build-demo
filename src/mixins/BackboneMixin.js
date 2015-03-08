@@ -9,7 +9,7 @@
 // using this mixin correctly (it should be near the top of your component
 // hierarchy) this should not be an issue.
 
-"use strict";
+'use strict';
 
 var BackboneMixin = {
   componentDidMount: function() {
@@ -26,7 +26,7 @@ var BackboneMixin = {
     // Ensure that we clean up any dangling references when the component is
     // destroyed.
     this.getBackboneCollection().off(null, null, this);
-    
+
     this.getBackboneCollection().forEach(function(model) {
       model.off(null, null, this);
     }, this);

@@ -18,6 +18,6 @@ var Todo = Backbone.Model.extend({
       (() => { return 'this is a sample ES6 anonymous function'; })();
     }
   }
-});
+})
 
 module.exports = Todo;

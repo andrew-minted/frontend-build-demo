@@ -21,7 +21,7 @@ describe('TodoApp Component', function() {
 
   before(function(){
     // define mocks
-    mockComponent = React.createClass({render:function(){return null;}});
+    mockComponent = React.createClass({ render: function(){ return null; }});
     mockMixin = {};
 
     // require module to unit test and
