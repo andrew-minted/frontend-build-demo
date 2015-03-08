@@ -11,7 +11,6 @@
     "browserify": "^9.0.3",
     "chai": "^2.1.1",
     "gulp": "^3.8.11",
-    "gulp-babel": "^4.0.0",
     "gulp-eslint": "^0.6.0",
     "gulp-jsx-coverage": "0.1.1",
     "gulp-livereload": "^3.8.0",
