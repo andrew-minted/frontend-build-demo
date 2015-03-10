@@ -47,12 +47,12 @@ All .js and .jsx files can freely use ES6 features, including the unit tests.
 
 ###Limitations:
 
-  - coverage statistics will only be gathered for files that are imported by *.tests.{js,jsx} files. This means that if you haven't written a unit test *file*, then the file that should be tested will not be reported in the coverage statistics.
-  This means it is crucial to always double check that a new js/jsx file is accompanied by a corresponding test file.
+  - SASS compiling currently only works for an entry file that
+    imports all the .scss files. The current setup works like this:
 
-  - the test-helpers/checkForUnitTests.js script will run after all the tests and report (via the terminal) any files that are missing an accompanying '*.tests.{js,jsx}' file.
+    html --> links to build/styles.css --> built from styles.scss, which links to all src/**/*.scss files and is recompiled on any changes to those source scss files.
 
-  - Make sure your unit test file requires the module you are testing, otherwise both istanbul AND the checkForUnitTests script will not flag the module as being untested. (TODO: upgrade the checkForUnitTests.js script to verify that the *.tests.{js,jsx} file requires the module it's supposed to test)
+  - TODO: auto-import (or use some other mechanism) .scss files so developers don't have to manually @import it in the entry-point 'styles.scss' file.
 
 
 ###Unit Testing:

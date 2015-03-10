@@ -6,6 +6,8 @@
 var gulp          = require('gulp');
 var gutil         = require('gulp-util');
 var connect       = require('gulp-connect');
+var sass          = require('gulp-sass');
+var sourcemaps    = require('gulp-sourcemaps');
 var runSequence   = require('run-sequence');
 var webpack       = require('webpack');
 var webpackConfig = require('./webpack.config');
@@ -25,9 +27,10 @@ var paths = {
 
 
 /* COMMANDS FOR DEVELOPERS
-* 'develop': spin up dev server, open browser, watch JS/JSX/SCSS source files for changes,
+* 'develop': spin up dev server, open browser, watch JS/JSX/SASS source files for changes,
 *            build bundles with source maps, and live reload browser on changes
 * 'build': TODO - add uglified node_env = 'production' webpack build task (see here: https://github.com/webpack/webpack-with-common-libs/blob/master/gulpfile.js)
+*                 without source maps, and all possible uglification optimizations
 * 'lint': run code linting
 * 'unittests': run unit tests and code coverage
 * 'test': run linting AND unit tests with code coverage
@@ -71,16 +74,23 @@ gulp.task('watch-html', function () {
 });
 
 
-// Watch SASS source files for changes
-// and trigger browser reload
-// ==================================
-gulp.task('watch-sass:dev', function () {
-  gulp.watch(paths.html, function(){
-    gulp.src(paths.html)
+// Watch SASS source files for changes,
+// rebuild, and trigger browser reload
+// ===================================
+gulp.task('watch-and-build-sass:dev', function(){
+  gulp.watch(paths.sass, function(){
+    gulp.src('./styles.scss')
+    .pipe(sourcemaps.init())
+    .pipe(sass({
+      errLogToConsole: true
+    }))
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest('./build'))
     .pipe(connect.reload());
-    gutil.log('[watcher: HTML]', ' Reloaded New HTML Assets in Browser');
+    gutil.log('[watcher: SASS]', ' Reloaded New SASS Assets in Browser');
   });
 });
+
 
 // Build Client JS Bundle (Development)
 // Watches for file changes
@@ -105,13 +115,16 @@ gulp.task('watch-and-build-js:dev', function() {
   });
 });
 
-gulp.task('watch-and-build-sass:dev', function(){
-
-});
 
 // For live reload to work, the connect server and the
 // reload command must be run by the same process
-gulp.task('develop', ['serve:dev', 'watch-html', 'watch-and-build-js:dev', 'open-url:dev']);
+gulp.task('develop', [
+  'serve:dev',
+  'watch-html',
+  'watch-and-build-sass:dev',
+  'watch-and-build-js:dev',
+  'open-url:dev'
+]);
 
 
 // Run Linting with ESLint
