@@ -17,8 +17,8 @@ var testcop       = require('test-cop');
 
 
 var paths = {
-  tests: ['src/**/*.tests.js', 'src/**/*.tests.jsx'],
-  js: ['src/**/*.js', 'src/**/*.jsx'],
+  tests: ['src/**/*.tests.{js,jsx}'],
+  js: ['src/**/*.{js,jsx}'],
   html: ['./index.html'],
   sass: ['src/**/*.scss']
 };
@@ -74,7 +74,7 @@ gulp.task('watch-html', function () {
 // Watch SASS source files for changes
 // and trigger browser reload
 // ==================================
-gulp.task('watch-sass', function () {
+gulp.task('watch-sass:dev', function () {
   gulp.watch(paths.html, function(){
     gulp.src(paths.html)
     .pipe(connect.reload());
@@ -105,18 +105,13 @@ gulp.task('watch-and-build-js:dev', function() {
   });
 });
 
-gulp.task('watch-and-build-styles:dev', ['watch-and-build-js:dev']);
+gulp.task('watch-and-build-sass:dev', function(){
+
+});
 
 // For live reload to work, the connect server and the
 // reload command must be run by the same process
 gulp.task('develop', ['serve:dev', 'watch-html', 'watch-and-build-js:dev', 'open-url:dev']);
-
-
-
-// Build Uglified JS Bundle for Deployment
-// no sourcemaps
-// ====================================
-
 
 
 // Run Linting with ESLint
@@ -124,7 +119,7 @@ gulp.task('develop', ['serve:dev', 'watch-html', 'watch-and-build-js:dev', 'open
 gulp.task('lint', function () {
   // Note: To have the process exit with an error code (1) on
   //  lint error, return the stream and pipe to failOnError last.
-  return gulp.src(['./src/**/*.{js,jsx}'])
+  return gulp.src([paths.js])
     .pipe(eslint())
     .pipe(eslint.format());
 });
@@ -143,13 +138,13 @@ gulp.task('unittests', function() {
   global.expect = require('chai').expect;
 
   // Run testcop to generate unit test scaffold for source files missing unit tests
-  testcop('./src/**/*.{js,jsx}', '.tests');
+  testcop(paths.js, '.tests');
 
   (jsxcoverage.createTask({
-    src: ['src/**/*.tests.{jsx,js}'],                              // will pass to gulp.src
+    src: [paths.tests],                                            // will pass to gulp.src
     istanbul: {                                                    // will pass to istanbul
         coverageVariable: '__MY_TEST_COVERAGE__',
-        exclude: /node_modules|\.tests\.(js|jsx)|\/test-helpers|app.jsx/
+        exclude: /node_modules|\.tests\.(js|jsx)/
     },
     transpile: {
         babel: {
@@ -175,6 +170,7 @@ gulp.task('unittests', function() {
   }))().on('error', console.log.bind(console));
 });
 
+
 // Run Linter, then Unit Tests (w/ Code Coverage)
 // ==============================================
 gulp.task('test', function(callback){
@@ -188,6 +184,3 @@ gulp.task('report', function(){
   gulp.src('./coverage/lcov-report/index.html')
   .pipe(open('<%file.path%>'));
 });
-
-
-gulp.task('default', ['develop']);
