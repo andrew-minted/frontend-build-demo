@@ -27,5 +27,6 @@ module.exports = {
       // allow loading jsx with es6 and js with es6
       {include: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader'}
     ]
-  }
+  },
+  plugins: []
 };
