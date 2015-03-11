@@ -9,14 +9,29 @@ npm install
 # Install gulp globally (if you don't already have it)
 npm install -g gulp
 
-# Start Build Process (watches for file changes)
+
+# spin up dev server, watch HTML/SASS/JS/JSX source files for changes,
+# build bundles with source maps, and opens browser (w/live reloading)
 gulp develop
 
-# (In a new tab), open the app
-open .
+# cleans existing build bundles, builds optimized css and jss
+# without sourcemaps, uglified, using all webpack # optimizations
+gulp build
 
-# Run Tests (this will run the linter, mocha, code coverage, and checkForUnitTests script)
+# delete all files in './build'
+gulp clean
+
+# run code linting (rules defined in .eslintrc)
+gulp lint
+
+# run unit tests and code coverage    
+gulp unittests
+
+# run linting AND unit tests with code coverage
 gulp test
+
+# open unit test coverage report in browser     
+gulp report
 ```
 
 
@@ -47,12 +62,12 @@ All .js and .jsx files can freely use ES6 features, including the unit tests.
 
 ###Limitations:
 
-  - coverage statistics will only be gathered for files that are imported by *.tests.{js,jsx} files. This means that if you haven't written a unit test *file*, then the file that should be tested will not be reported in the coverage statistics.
-  This means it is crucial to always double check that a new js/jsx file is accompanied by a corresponding test file.
+  - SASS compiling currently only works for an entry file that
+    imports all the .scss files. The current setup works like this:
 
-  - the test-helpers/checkForUnitTests.js script will run after all the tests and report (via the terminal) any files that are missing an accompanying '*.tests.{js,jsx}' file.
+    html --> links to build/styles.css --> built from styles.scss, which links to all src/**/*.scss files and is recompiled on any changes to those source scss files.
 
-  - Make sure your unit test file requires the module you are testing, otherwise both istanbul AND the checkForUnitTests script will not flag the module as being untested. (TODO: upgrade the checkForUnitTests.js script to verify that the *.tests.{js,jsx} file requires the module it's supposed to test)
+  - TODO: auto-import (or use some other mechanism) .scss files so developers don't have to manually @import it in the entry-point 'styles.scss' file.
 
 
 ###Unit Testing:
