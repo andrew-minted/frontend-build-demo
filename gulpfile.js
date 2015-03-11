@@ -74,7 +74,7 @@ gulp.task('clean', function() {
 gulp.task('lint', function () {
   // Note: To have the process exit with an error code (1) on
   //  lint error, return the stream and pipe to failOnError last.
-  return gulp.src([paths.js])
+  return gulp.src(paths.js)
     .pipe(eslint())
     .pipe(eslint.format());
 });
@@ -92,10 +92,10 @@ gulp.task('unittests', function() {
   global.expect = require('chai').expect;
 
   // Run testcop to generate unit test scaffold for source files missing unit tests
-  testcop(paths.js, '.tests');
+  testcop(paths.js[0], '.tests');
 
   (jsxcoverage.createTask({
-    src: [paths.tests],                                            // will pass to gulp.src
+    src: paths.tests,                                            // will pass to gulp.src
     istanbul: {                                                    // will pass to istanbul
         coverageVariable: '__MY_TEST_COVERAGE__',
         exclude: /node_modules|\.tests\.(js|jsx)/
